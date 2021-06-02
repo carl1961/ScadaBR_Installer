@@ -1,121 +1,101 @@
 #!/bin/bash
 
 function checkfiles {
-    if [ -f $java6 ] ; then
-       # java installer present
-       echo -e "$java6 file present! Lets go to install!"
+    if [[ -f "$java" ]] && [[ -f "$tomcat" ]] && [[ -f "ScadaBR.war" ]] ; then
+		# Installer files present, continue
+		echo "Files present! Lets go to install!"
     else
-       echo -e "ERROR: $java6 file not found!" 
-       exit
-    fi
-
-    if [ -f $tomcat ] ; then
-       # tomcat installer present
-       echo -e "$tomcat file present! We will install tomcat soon!"
-    else
-       echo -e "ERROR: $tomcat file not found!" 
-       exit
+		# Files not present. Abort
+		echo "ERROR: Java, ScadaBR and/or Tomcat files not found!" 
+		exit
     fi
 }
 
 
-function updateAlternative {
-   echo -e " - working on update-alternatives"
-   update-alternatives --install "/usr/bin/java" "java" "/opt/java/jre/bin/java" 1 
-   update-alternatives --set java /opt/java/jre/bin/java 
-   #update-alternatives --install "/usr/bin/javaws" "javaws" "/opt/java/jre/bin/javaws" 1
-   #update-alternatives --set javaws /opt/java/jre/bin/javaws
-   echo -e " - Finished installing Java!"
-   sleep 3
+function createInstallFolder {
+	if [[ -d $INSTALL_FOLDER ]]; then
+		# Install folder already exists. Is ScadaBR already installed?
+		echo "Installation folder ($INSTALL_FOLDER) already exists. Aborting."
+		exit
+	else
+		mkdir -p "$INSTALL_FOLDER"
+	fi
 }
 
+function installTomcat {
+	echo
+	echo "Installing Tomcat:"
 
-function instTOMCAT {
-  echo -e " - Installing Tomcat6\n   __________________\n\n"
-  echo -e " - Creating folder /opt/tomcat6"
-  mkdir -p /opt/tomcat6
-  echo -e " - Copying installer $tomcat to /opt/tomcat6"
-  cp ${CURRENT_FOLDER}/$tomcat /opt/tomcat6/
-  cd /opt/tomcat6
-  echo -e " - Set permissions for $tomcat"
-  chmod +x $tomcat
-  echo -e " - Decompressing $tomcat"
-  tar xvf $tomcat > /tmp/instalacao.log
-  echo -e " - Copying ScadaBR"
-  cp ${CURRENT_FOLDER}/ScadaBR.war /opt/tomcat6/apache-tomcat-6.0.53/webapps/
-  echo -e " - Changing Tomcat port to 9090"
-  cp ${CURRENT_FOLDER}/server.xml /opt/tomcat6/apache-tomcat-6.0.53/conf/
-  echo -e " - Starting Tomcat6: /opt/tomcat6/apache-tomcat-6.0.53/bin/startup.sh"
-  /opt/tomcat6/apache-tomcat-6.0.53/bin/startup.sh
+	cd "$INSTALL_FOLDER"
+	
+	echo "   * Copying Tomcat into installation folder"
+	cp "${CURRENT_FOLDER}/$tomcat" "$INSTALL_FOLDER/$tomcat"
+	
+	echo "   * Extratcting tomcat files..."
+	tar xvf "$tomcat" > /tmp/scadabrInstall.log && rm "$tomcat"
+	
+	echo "   * Renaming Tomcat folder"
+	mv apache-tomcat-* tomcat
+	
+	echo "   * Copying ScadaBR into Tomcat..."
+	cp "${CURRENT_FOLDER}/ScadaBR.war" "${INSTALL_FOLDER}/tomcat/webapps/ScadaBR.war"
+	
+	echo "   * Setting permissions..."
+	chmod 755 -R tomcat/
+	
+	echo "Done."
+	echo
 }
 
-
-function cCheckJAVAHOME(){
- if [ -z "$JAVA_HOME" ]; then
-   # JAVA_HOME not exists! fixing!
-    echo - set the JAVA_HOME now!
-    export JAVA_HOME=/opt/java/ejre1.6.0_38/
-    export PATH=$JAVA_HOME/bin/:$PATH
-    source /etc/profile
-  else
-       # do nothing, JAVA_HOME is set
-       echo -e "Java is installed at $JAVA_HOME"
-  fi
-
+function configureTomcat {
+	echo
+	echo "=== Tomcat configuration ==="
+	
+	key=n
+	
+	while [[ $key == "n" ]]; do
+		read -p "Define Tomcat port (default: 8080): " TOMCAT_PORT
+		read -p "Define a username for tomcat-manager: " TOMCAT_USER
+		read -p "Define a password for created user: " TOMCAT_PASSWORD
+		
+		[[ $TOMCAT_PORT -gt 0 ]] || TOMCAT_PORT=8080
+		[[ -n $TOMCAT_USER ]] || TOMCAT_USER=tomcat
+		[[ -n $TOMCAT_PASSWORD ]] || TOMCAT_PASSWORD=tomcat${RANDOM}
+		
+		echo
+		echo "Tomcat port will be set to $TOMCAT_PORT"
+		echo "A user with name \"$TOMCAT_USER\" and password \"$TOMCAT_PASSWORD\" will be created to tomcat-manager"
+		echo
+		read -p "Type n to correct the entered data or press ENTER to continue..." key
+	done
+	echo
 }
 
-function iCheckJAVAHOME(){
- if [ -z "$JAVA_HOME" ]; then
-   # JAVA_HOME not exists! fixing!
-    echo - set the JAVA_HOME now!
-     export JAVA_HOME=/opt/java/jre1.6.0_45/
-     export PATH=$JAVA_HOME/bin/:$PATH
-     source /etc/profile
-  else
-       # do nothing, JAVA_HOME is set
-       echo -e "Java is installed at $JAVA_HOME"
-  fi
-
+function changeTomcatSettings {
+	# Change tomcat port
+	sed -i "s/port=\"8080\"/port=\"${TOMCAT_PORT}\"/" "$INSTALL_FOLDER/tomcat/conf/server.xml"
+	
 }
 
-
- 
-
-function instJava {
-  echo -e " - Installing $java6"
-  echo -e " - Creating folder /opt/java"
-  mkdir -p /opt/java/ 
-  echo -e " - Moving $java6 to /opt/java"
-  cp $java6 /opt/java 
-  echo -e " - Changing path to /opt/java"
-  cd /opt/java
-  echo -e " - Set Permissions"
-  chmod 755 /opt/java/$java6
-  echo -e " - Installing $java6" 
-  ./$java6 > /tmp/instalacao.log
-  echo -e " - Creating jre symlink"
-  ln -s jre1.6.0_45 jre
-   iCheckJAVAHOME
-  updateAlternative
-}
-
-function unpackJava {
-  echo -e " - Unpacking $java6"
-  echo -e " - Creating folder /opt/java"
-  mkdir -p /opt/java/ 
-  echo -e " - Moving $java6 to /opt/java"
-  cp $java6 /opt/java 
-  echo -e " - Changing path to /opt/java"
-  cd /opt/java
-  echo -e " - Set Permissions"
-  chmod 755 /opt/java/$java6
-  echo -e " - Installing $java6" 
-  tar xvzf $java6 > /tmp/instalacao.log
-  echo -e " - Creating jre symlink"
-  ln -s ejre1.6.0_38 jre
-  cCheckJAVAHOME
-  updateAlternative
-
+function installJava {
+	echo
+	echo -e "Installing Java:"
+	cd "$INSTALL_FOLDER"
+	
+	echo "   * Copying Java into installation folder"
+	cp "${CURRENT_FOLDER}/$java" "$INSTALL_FOLDER/$java"
+	
+	echo "   * Extracting Java files..."
+	tar xvzf "$java" > /tmp/scadabrInstall.log && rm "$java"
+	
+	echo "   * Setting permissions..."
+	chmod 755 -R *jre*
+	
+	echo "   * Creating JRE symlink..."
+	ln -s *jre* jre
+	
+	echo "Done."
+	echo
 }
 
 
@@ -127,32 +107,38 @@ fi
 
 # Setting  variables...
 
-MACHINE_TYPE=`uname -m`
-tomcat=apache-tomcat-6.0.53.tar.gz
-CURRENT_FOLDER=`pwd`
+MACHINE_TYPE=$(uname -m)
+CURRENT_FOLDER=$(pwd)
+INSTALL_FOLDER=/opt/patolino
 
+tomcat=apache-tomcat-9.0.46.tar.gz
+tomcat_custom=apache-tomcat-custom.tar.gz
+java_custom=jdk-8-custom.tar.gz
+
+tomcat=apache-tomcat-9.0.46.tar.gz
+java_x86=openlogic-openjdk-jre-8u292-b10-linux-x32.tar.gz
+java_x64=OpenJDK8U-jre_x64_linux_hotspot_8u292b10.tar.gz
+java_arm32=OpenJDK8U-jre_arm_linux_hotspot_8u292b10.tar.gz
+java_arm64=OpenJDK8U-jre_aarch64_linux_hotspot_8u292b10.tar.gz
 
 
 if [ ${MACHINE_TYPE} == 'aarch64' ]; then
-    echo "raspberry arm machine detected"
-    java6=jre-6u38-linux-arm.tar.gz
-    checkfiles
-    unpackJava
-    instTOMCAT
+    echo "arm 64 bits machine detected"
+    java=$java_arm64
+    
 elif [ ${MACHINE_TYPE} == 'armv7l' ]; then
-    echo "arnv7l machine detected"
-    java6=jre-6u38-linux-arm.tar.gz
-    checkfiles
-    unpackJava
-    instTOMCAT
+    echo "arm 32 bits machine detected"
+    java=$java_arm32
+    
 elif [ ${MACHINE_TYPE} == 'x86_64' ]; then
     echo "64-bit machine detected"
-    java6=jre-6u45-linux-x64.bin
-    checkfiles
-    instJava
-    instTOMCAT
+    java=$java_x64
+    createInstallFolder
+    installJava
+    installTomcat
+    configureTomcat
 else
     echo "32-bit machine detected"
-    java6=jre-6u45-linux-i586.bin
+    java=$java_x86
 fi
 
