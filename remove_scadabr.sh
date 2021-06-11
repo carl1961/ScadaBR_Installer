@@ -54,7 +54,7 @@ function removeFiles {
 
 # Remove startup service (for now we are using a crontab workaround)
 function removeStartupService {
-	echo "Removing startup service.."
+	echo "Removing startup service..."
 	
 	# Test if there is a crontab job to startup tomcat
 	if [[ "$(crontab -l)" == *"${INSTALL_FOLDER}/tomcat/bin/startup.sh"* ]]; then
