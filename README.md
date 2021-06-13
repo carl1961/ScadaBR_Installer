@@ -1,9 +1,11 @@
-# ScadaBR Installer for EF version
+# ScadaBR Installer for ScadaBR-EF
 (Forked from thiagoralves/ScadaBR_Installer)
 
 ## English description
 
 Script to install ScadaBR on Linux machines, adapted to ScadaBR-EF and Java/OpenJDK 8
+
+(The OpenJDK builds in this repository come from [AdoptOpenJDK](https://adoptopenjdk.net/) and [OpenLogic](https://www.openlogic.com/openjdk-downloads))
 
 #### Supported architectures:
 - i386 (32 bit)
@@ -24,6 +26,8 @@ Note: When installing, you will be asked for the port to be used in Tomcat and t
 ## Descrição em português
 
 Script para instalar o ScadaBR em máquinas Linux, adaptado ao ScadaBR-EF e Java/OpenJDK 8
+
+(As builds do OpenJDK presentes neste repositório vêm do [AdoptOpenJDK](https://adoptopenjdk.net/) e do [OpenLogic](https://www.openlogic.com/openjdk-downloads))
 
 #### Arquiteturas suportadas:
 - i386 (32 bit)
