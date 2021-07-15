@@ -60,7 +60,7 @@ function installTomcat {
 	tar xvf "$tomcat" > /tmp/scadabrInstall.log && rm "$tomcat"
 	
 	echo "   * Renaming Tomcat folder"
-	mv apache-tomcat-* tomcat
+	mv apache-tomcat* tomcat
 	
 	echo "   * Extracting ScadaBR into Tomcat..."
 	mkdir -p "${INSTALL_FOLDER}/tomcat/webapps/ScadaBR"
@@ -189,7 +189,7 @@ CURRENT_FOLDER=$(pwd)
 INSTALL_FOLDER=/opt/ScadaBR-EF
 
 # Files
-tomcat=apache-tomcat-9.0.46.tar.gz
+tomcat=apache-tomcat.tar.gz
 scadabr=ScadaBR.war
 java_x86=openlogic-openjdk-jre-8u292-b10-linux-x32.tar.gz
 java_x64=OpenJDK8U-jre_x64_linux_hotspot_8u292b10.tar.gz
