@@ -15,12 +15,27 @@ Script to install ScadaBR on Linux machines, adapted to ScadaBR-EF and Java/Open
 
 #### Installation:
 - Download the sources and extract the compressed file
+ 
+git clone https://github.com/thiagoralves/ScadaBR_Installer.git
+
+cd ScadaBR_Installer
+
 - Give execute permissions to `install_scadabr.sh` and `remove_scadabr.sh` scripts (through the GUI or the command `chmod + x <filename>`)
+ 
+sudo chmod + x install_scadabr.sh
+sudo chmod + x remove_scadabr.sh
+
 - To install ScadaBR, run the script `install_scadabr.sh` using the command `./install_scadabr.sh`
+
+sudo ./install_scadabr.sh
+
 - To remove ScadaBR, run the `remove_scadabr.sh` script via the command `./remove_scadabr.sh`
+
+sudo ./remove_scadabr.sh
 
 Note: When installing, you will be asked for the port to be used in Tomcat and the username/password for tomcat-manager. If you want to do a silent installation, use the `./install_scadabr.sh silent` command. In this mode, Tomcat will be installed on port 8080 and the username and password generated for tomcat-manager will be printed on the terminal.
 
+sudo ./install_scadabr.sh silent
 
 
 ## Descrição em português
