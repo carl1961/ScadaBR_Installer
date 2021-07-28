@@ -37,7 +37,7 @@ Note: When installing, you will be asked for the port to be used in Tomcat and t
 
 #### sudo ./install_scadabr.sh silent
 
-#### In web browser type   http://localhost:8080/ScadaBR
+#### In web browser type   http://localhost:8080/ScadaBR  or IP address http://192.168.1.10:8080/ScadaBR
 
 #### Descrição em português
 
@@ -75,4 +75,4 @@ Obs.: Ao instalar, você será perguntado pela porta a ser usada no Tomcat e o n
 
 #### sudo ./install_scadabr.sh silent
 
-#### No tipo de navegador da Web http://localhost:8080/ScadaBR
+#### No tipo de navegador da Web http://localhost:8080/ScadaBR ou endereço IP http://192.168.1.10:8080/ScadaBR
