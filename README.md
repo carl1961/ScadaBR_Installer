@@ -22,8 +22,8 @@ git clone https://github.com/celsou/ScadaBR_Installer.git
 
 - Give execute permissions to `install_scadabr.sh` and `remove_scadabr.sh` scripts (through the GUI or the command `chmod + x <filename>`)
  
-#### sudo chmod + x install_scadabr.sh
-#### sudo chmod + x remove_scadabr.sh
+#### sudo chmod +x install_scadabr.sh
+#### sudo chmod +x remove_scadabr.sh
 
 - To install ScadaBR, run the script `install_scadabr.sh` using the command `./install_scadabr.sh`
 
@@ -59,8 +59,8 @@ git clone https://github.com/celsou/ScadaBR_Installer.git
 
 - Dê permissões de execução aos scripts `install_scadabr.sh` e `remove_scadabr.sh` (através da interface gráfica ou com o comando `chmod +x <nome_do_arquivo>`)
 - 
-#### sudo chmod + x install_scadabr.sh
-#### sudo chmod + x remove_scadabr.sh
+#### sudo chmod +x install_scadabr.sh
+#### sudo chmod +x remove_scadabr.sh
 
 - Para instalar o ScadaBR, execute o script `install_scadabr.sh` através do comando `./install_scadabr.sh`
 - 
