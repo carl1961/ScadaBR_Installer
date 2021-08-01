@@ -16,7 +16,7 @@ Script to install ScadaBR on Linux machines, adapted to ScadaBR-EF and Java/Open
 #### Installation:
 - Download the sources 
  
-git clone https://github.com/celsou/ScadaBR_Installer.git
+git clone  https://github.com/carl1961/ScadaBR_Installer.git
 
 #### cd ScadaBR_Installer
 
@@ -54,7 +54,7 @@ Script para instalar o ScadaBR em máquinas Linux, adaptado ao ScadaBR-EF e Java
 #### Instalação:
 - Faça o download dos sources  
 
-git clone https://github.com/celsou/ScadaBR_Installer.git
+git clone  https://github.com/carl1961/ScadaBR_Installer.git
 
 #### cd ScadaBR_Installer
 
